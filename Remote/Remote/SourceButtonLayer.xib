@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Normal" customClass="SourceButtonLayer" customModule="Remote" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="221"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="source-appletv" translatesAutoresizingMaskIntoConstraints="NO" id="6u6-DQ-OAo">
+                    <rect key="frame" x="42" y="62.5" width="66" height="66"/>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="66" id="Fdg-Cb-xy4"/>
+                        <constraint firstAttribute="width" constant="66" id="bYj-NN-FW3"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I5n-pH-3qT">
+                    <rect key="frame" x="57" y="142" width="36" height="17"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                    <color key="textColor" red="0.52156862745098043" green="0.58431372549019611" blue="0.65098039215686276" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.17254901960784313" green="0.23529411764705882" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="6u6-DQ-OAo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="76K-mG-af4"/>
+                <constraint firstItem="I5n-pH-3qT" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="40" id="ew8-CU-KMU"/>
+                <constraint firstItem="6u6-DQ-OAo" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-15" id="qAO-24-W1t"/>
+                <constraint firstItem="I5n-pH-3qT" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="zrV-gQ-OY2"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="5"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="iconImageView" destination="6u6-DQ-OAo" id="HWt-cA-0ad"/>
+                <outlet property="label" destination="I5n-pH-3qT" id="Pyd-rT-B17"/>
+            </connections>
+            <point key="canvasLocation" x="246" y="371.5"/>
+        </view>
+        <view tag="1" contentMode="scaleToFill" id="dS3-tz-spe" userLabel="Highlighted" customClass="SourceButtonLayer" customModule="Remote" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="221"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="source-appletv" translatesAutoresizingMaskIntoConstraints="NO" id="4jF-A2-NBd">
+                    <rect key="frame" x="42" y="62.5" width="66" height="66"/>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="66" id="F0G-1p-ntr"/>
+                        <constraint firstAttribute="height" constant="66" id="f48-f5-QkN"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1wY-Y9-V0y">
+                    <rect key="frame" x="57" y="142" width="36" height="17"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                    <color key="textColor" red="0.52156862749999999" green="0.58431372550000005" blue="0.65098039220000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="4jF-A2-NBd" firstAttribute="centerY" secondItem="dS3-tz-spe" secondAttribute="centerY" constant="-15" id="H04-gH-iqd"/>
+                <constraint firstItem="1wY-Y9-V0y" firstAttribute="centerY" secondItem="dS3-tz-spe" secondAttribute="centerY" constant="40" id="Mib-98-JB5"/>
+                <constraint firstItem="4jF-A2-NBd" firstAttribute="centerX" secondItem="dS3-tz-spe" secondAttribute="centerX" id="dT0-yo-4zL"/>
+                <constraint firstItem="1wY-Y9-V0y" firstAttribute="centerX" secondItem="dS3-tz-spe" secondAttribute="centerX" id="jPa-p6-zQl"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="5"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="iconImageView" destination="4jF-A2-NBd" id="81g-TM-mec"/>
+                <outlet property="label" destination="1wY-Y9-V0y" id="33N-ow-foA"/>
+            </connections>
+            <point key="canvasLocation" x="530" y="371.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="source-appletv" width="46" height="46"/>
+    </resources>
+</document>

@@ -9,10 +9,31 @@
 import UIKit
 
 class SourceButton: UIView {
-	@IBOutlet var iconImageView:UIImageView!
-	@IBOutlet var label:UILabel!
+	var normalView:SourceButtonLayer?
+	var highlightedView:SourceButtonLayer?
 	
-	override func awakeFromNib() {
-		self.iconImageView.tintColor = UIColor.whiteColor()
+	override init(frame:CGRect) {
+		super.init(frame:frame)
+		setup()
+	}
+	
+	required init(coder aDecoder:NSCoder) {
+		super.init(coder:aDecoder)!
+		setup()
+	}
+	
+	private func setup() {
+		self.backgroundColor = UIColor.clearColor()
+		let views = NSBundle.mainBundle().loadNibNamed("SourceButtonLayer", owner:self, options:nil) as! [SourceButtonLayer]
+		for view in views {
+			if (view.tag == 0) {
+				self.normalView = view
+			} else if (view.tag == 1) {
+				self.highlightedView = view
+			}
+			self.addSubview(view)
+			view.frame = CGRectMake(1, 1, self.bounds.size.width - 2, self.bounds.size.height - 2)
+			view.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+		}
 	}
 }

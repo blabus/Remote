@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SourceViewController" customModule="Remote" customModuleProvider="target">
             <connections>
                 <outlet property="view" destination="iN0-l3-epB" id="sWT-gm-PFa"/>
+                <outlet property="volumeControlContainer" destination="HiS-0N-B5H" id="Xd7-L2-Fmn"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -77,11 +78,19 @@
                         </stackView>
                     </subviews>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HiS-0N-B5H" userLabel="Volume Control Container">
+                    <rect key="frame" x="304" y="0.0" width="71" height="667"/>
+                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.090196078431372548" green="0.14117647058823529" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="HiS-0N-B5H" firstAttribute="leading" secondItem="Xv2-96-NG4" secondAttribute="trailing" id="IEX-X7-ChX"/>
+                <constraint firstAttribute="trailing" secondItem="HiS-0N-B5H" secondAttribute="trailing" id="Mlv-f1-9gT"/>
+                <constraint firstItem="HiS-0N-B5H" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="cLT-Tk-8Xt"/>
                 <constraint firstAttribute="trailing" secondItem="Xv2-96-NG4" secondAttribute="trailing" constant="71" id="dRI-VK-lhN"/>
                 <constraint firstItem="Xv2-96-NG4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="-1" id="dmO-AX-RrH"/>
+                <constraint firstAttribute="bottom" secondItem="HiS-0N-B5H" secondAttribute="bottom" id="h7b-CW-ldQ"/>
                 <constraint firstAttribute="bottom" secondItem="Xv2-96-NG4" secondAttribute="bottom" constant="-1" id="ptC-Tz-O1k"/>
                 <constraint firstItem="Xv2-96-NG4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="-1" id="zK2-a8-cmq"/>
             </constraints>

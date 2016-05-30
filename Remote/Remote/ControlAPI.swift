@@ -108,24 +108,32 @@ class ControlAPI {
 			if (self._receiverOn != newReceiverOn) {
 				self._receiverOn = newReceiverOn!
 				for callback in self._sourceChangeEventListeners {
-					callback(selectedSource: (self._receiverOn ? newSelectedSource : nil))
+					dispatch_async(dispatch_get_main_queue(), {
+						callback(selectedSource: (self._receiverOn ? newSelectedSource : nil))
+					})
 				}
 			} else if (self.selectedSource?.input != newSelectedSource?.input && self._receiverOn) {
 				self.selectedSource = newSelectedSource
 				for callback in self._sourceChangeEventListeners {
-					callback(selectedSource: self.selectedSource)
+					dispatch_async(dispatch_get_main_queue(), {
+						callback(selectedSource: self.selectedSource)
+					})
 				}
 			}
 			if (self.volume != newVolume) {
 				self.volume = newVolume!
 				for callback in self._volumeChangeEventListeners {
-					callback(volume: self.volume!)
+					dispatch_async(dispatch_get_main_queue(), {
+						callback(volume: self.volume!)
+					})
 				}
 			}
 			if (self.muted != newMuted) {
 				self.muted = newMuted!
 				for callback in self._muteChangeEventListeners {
-					callback(muted: self.muted!)
+					dispatch_async(dispatch_get_main_queue(), {
+						callback(muted: self.muted!)
+					})
 				}
 			}
 		}
@@ -150,7 +158,9 @@ class ControlAPI {
 	}
 	
 	func setVolume(volume: Float) {
-		self.volume = volume
+		self.volume = max(min(volume, _maxVolume!), _minVolume)
+		let volumeStr = "\(Int(self.volume! * 10))"
+		_sendReceiverRequest("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Volume><Lvl><Val>\(volumeStr)</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>") { (data, response, error) in }
 	}
 	
 	func setMuted(muted: Bool) {

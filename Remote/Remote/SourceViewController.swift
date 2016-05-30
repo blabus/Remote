@@ -12,6 +12,9 @@ class SourceViewController: UIViewController {
 	var sourceButtons:[SourceButton] = []
 	private let api = ControlAPI.sharedInstance
 	
+	@IBOutlet var volumeControlContainer:UIView?
+	var volumeControl:VolumeControl?
+	
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 		
@@ -40,23 +43,24 @@ class SourceViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		ControlAPI.sharedInstance.addSourceChangeListener { (selectedSource) in
-			var sourceIndex = ControlAPI.sharedInstance.sources.indexOf({ (source) -> Bool in
-				return source.input == selectedSource?.input
-			})
-			if (sourceIndex == nil) {
-				sourceIndex = -1
-			}
-			for (index, button) in self.sourceButtons.enumerate() {
-				dispatch_async(dispatch_get_main_queue(), {
-					button.setSelected(index == sourceIndex!, position: nil, animated: true)
-				})
-			}
-		}
+		ControlAPI.sharedInstance.addSourceChangeListener(_onSourceChange)
+		
+		volumeControl = NSBundle.mainBundle().loadNibNamed("VolumeControl", owner:self, options:nil).first as? VolumeControl
+		volumeControlContainer!.addSubview(volumeControl!)
+		volumeControl!.frame = CGRectMake(0, 0, volumeControlContainer!.bounds.size.width, volumeControlContainer!.bounds.size.height)
+		volumeControl!.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
 	}
 	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
+	private func _onSourceChange(selectedSource: Source?) {
+		var sourceIndex = ControlAPI.sharedInstance.sources.indexOf({ (source) -> Bool in
+			return source.input == selectedSource?.input
+		})
+		if (sourceIndex == nil) {
+			sourceIndex = -1
+		}
+		for (index, button) in self.sourceButtons.enumerate() {
+			button.setSelected(index == sourceIndex!, position: nil, animated: true)
+		}
 	}
 	
 	@IBAction func sourceTapped(button: SourceButton) {

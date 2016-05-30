@@ -47,13 +47,11 @@ class SourceButton: UIControl {
 		setup()
 	}
 	
-	override func didMoveToSuperview() {
-		if (self.highlightMaskLayer == nil) {
-			self.highlightMaskLayer = CAShapeLayer()
-			self.highlightMaskLayer!.fillColor = UIColor.blackColor().CGColor
-			self.highlightedView!.layer.addSublayer(self.highlightMaskLayer!)
-			self.highlightedView!.layer.mask = self.highlightMaskLayer!
-		}
+	override func awakeFromNib() {
+		self.highlightMaskLayer = CAShapeLayer()
+		self.highlightMaskLayer!.fillColor = UIColor.blackColor().CGColor
+		self.highlightedView!.layer.addSublayer(self.highlightMaskLayer!)
+		self.highlightedView!.layer.mask = self.highlightMaskLayer!
 	}
 	
 	private func setup() {

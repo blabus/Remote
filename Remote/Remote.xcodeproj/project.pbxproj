@@ -14,6 +14,8 @@
 		A9258DFC1CFBF527002FBD0E /* ControlAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9258DFB1CFBF527002FBD0E /* ControlAPI.swift */; };
 		A9258DFE1CFBF7FF002FBD0E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A9258DFD1CFBF7FF002FBD0E /* Settings.bundle */; };
 		A9258E001CFC11F2002FBD0E /* SWXMLHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9258DFF1CFC11F2002FBD0E /* SWXMLHash.swift */; };
+		A9258E021CFCDD66002FBD0E /* VolumeControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9258E011CFCDD66002FBD0E /* VolumeControl.swift */; };
+		A9258E061CFCDDDB002FBD0E /* VolumeControl.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9258E051CFCDDDB002FBD0E /* VolumeControl.xib */; };
 		A92B7C151CCF436700A4EF2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92B7C141CCF436700A4EF2A /* AppDelegate.swift */; };
 		A92B7C1C1CCF436800A4EF2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A92B7C1B1CCF436800A4EF2A /* Assets.xcassets */; };
 		A938EA5F1CE040B80093231F /* SourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A938EA5E1CE040B80093231F /* SourceViewController.swift */; };
@@ -28,6 +30,8 @@
 		A9258DFB1CFBF527002FBD0E /* ControlAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlAPI.swift; sourceTree = "<group>"; };
 		A9258DFD1CFBF7FF002FBD0E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A9258DFF1CFC11F2002FBD0E /* SWXMLHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWXMLHash.swift; sourceTree = "<group>"; };
+		A9258E011CFCDD66002FBD0E /* VolumeControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeControl.swift; sourceTree = "<group>"; };
+		A9258E051CFCDDDB002FBD0E /* VolumeControl.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VolumeControl.xib; sourceTree = "<group>"; };
 		A92B7C111CCF436700A4EF2A /* Remote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Remote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A92B7C141CCF436700A4EF2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A92B7C1B1CCF436800A4EF2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -47,6 +51,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A9258E031CFCDD71002FBD0E /* API */ = {
+			isa = PBXGroup;
+			children = (
+				A9258DFB1CFBF527002FBD0E /* ControlAPI.swift */,
+				A9258DF91CFBE39C002FBD0E /* Source.swift */,
+				A9258DFF1CFC11F2002FBD0E /* SWXMLHash.swift */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		A9258E041CFCDD8D002FBD0E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A938EA5E1CE040B80093231F /* SourceViewController.swift */,
+				A938EA601CE041050093231F /* SourceViewController.xib */,
+				A91DA40D1CFA7B1B00A6DC96 /* SourceButton.swift */,
+				A91DA40B1CFA276300A6DC96 /* SourceButtonLayer.swift */,
+				A91DA4091CFA1DF200A6DC96 /* SourceButtonLayer.xib */,
+				A9258E011CFCDD66002FBD0E /* VolumeControl.swift */,
+				A9258E051CFCDDDB002FBD0E /* VolumeControl.xib */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		A92B7C081CCF436700A4EF2A = {
 			isa = PBXGroup;
 			children = (
@@ -66,15 +94,9 @@
 		A92B7C131CCF436700A4EF2A /* Remote */ = {
 			isa = PBXGroup;
 			children = (
-				A9258DFF1CFC11F2002FBD0E /* SWXMLHash.swift */,
 				A92B7C141CCF436700A4EF2A /* AppDelegate.swift */,
-				A938EA5E1CE040B80093231F /* SourceViewController.swift */,
-				A938EA601CE041050093231F /* SourceViewController.xib */,
-				A91DA40D1CFA7B1B00A6DC96 /* SourceButton.swift */,
-				A91DA40B1CFA276300A6DC96 /* SourceButtonLayer.swift */,
-				A91DA4091CFA1DF200A6DC96 /* SourceButtonLayer.xib */,
-				A9258DFB1CFBF527002FBD0E /* ControlAPI.swift */,
-				A9258DF91CFBE39C002FBD0E /* Source.swift */,
+				A9258E031CFCDD71002FBD0E /* API */,
+				A9258E041CFCDD8D002FBD0E /* UI */,
 				A92B7C201CCF436800A4EF2A /* Info.plist */,
 				A92B7C1B1CCF436800A4EF2A /* Assets.xcassets */,
 				A9258DFD1CFBF7FF002FBD0E /* Settings.bundle */,
@@ -140,6 +162,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9258E061CFCDDDB002FBD0E /* VolumeControl.xib in Resources */,
 				A9258DFE1CFBF7FF002FBD0E /* Settings.bundle in Resources */,
 				A92B7C1C1CCF436800A4EF2A /* Assets.xcassets in Resources */,
 				A91DA40A1CFA1DF200A6DC96 /* SourceButtonLayer.xib in Resources */,
@@ -161,6 +184,7 @@
 				A91DA40E1CFA7B1B00A6DC96 /* SourceButton.swift in Sources */,
 				A9258DFA1CFBE39C002FBD0E /* Source.swift in Sources */,
 				A938EA5F1CE040B80093231F /* SourceViewController.swift in Sources */,
+				A9258E021CFCDD66002FBD0E /* VolumeControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

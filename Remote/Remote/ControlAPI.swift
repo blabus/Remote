@@ -14,6 +14,8 @@ class ControlAPI {
 	
 	private let _receiverAddress:String?
 	private let _tvAddress:String?
+	private let _minVolume:Float = -80
+	private var _maxVolume:Float?
 	private var _receiverOn:Bool = false
 	private var _pollingTimer:NSTimer?
 	private var _sourceChangeEventListeners:[(selectedSource: Source?) -> Void] = []
@@ -28,6 +30,9 @@ class ControlAPI {
 	init() {
 		_receiverAddress = NSUserDefaults.standardUserDefaults().stringForKey("receiver_network_address")
 		_tvAddress = NSUserDefaults.standardUserDefaults().stringForKey("tv_network_address")
+		_maxVolume = NSUserDefaults.standardUserDefaults().floatForKey("max_volume")
+		_maxVolume = round(max(min(_maxVolume!, 16.5), _minVolume) * 2) / 2
+		NSUserDefaults.standardUserDefaults().setFloat(_maxVolume!, forKey: "max_volume")
 		self.sources.append(Source.init(input: "HDMI1", label: "Apple TV", icon: UIImage.init(named: "source-appletv")!))
 		self.sources.append(Source.init(input: "HDMI2", label: "Xbox", icon: UIImage.init(named: "source-xbox")!))
 		self.sources.append(Source.init(input: "HDMI3", label: "PS4", icon: UIImage.init(named: "source-ps4")!))
@@ -103,7 +108,7 @@ class ControlAPI {
 			if (self._receiverOn != newReceiverOn) {
 				self._receiverOn = newReceiverOn!
 				for callback in self._sourceChangeEventListeners {
-					callback(selectedSource: (self._receiverOn ? newSelectedSource! : nil))
+					callback(selectedSource: (self._receiverOn ? newSelectedSource : nil))
 				}
 			} else if (self.selectedSource?.input != newSelectedSource?.input && self._receiverOn) {
 				self.selectedSource = newSelectedSource

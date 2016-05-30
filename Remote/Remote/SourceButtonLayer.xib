@@ -28,6 +28,9 @@
                 </label>
             </subviews>
             <color key="backgroundColor" red="0.17254901960784313" green="0.23529411764705882" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
+            <accessibility key="accessibilityConfiguration">
+                <accessibilityTraits key="traits" notEnabled="YES"/>
+            </accessibility>
             <constraints>
                 <constraint firstItem="6u6-DQ-OAo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="76K-mG-af4"/>
                 <constraint firstItem="I5n-pH-3qT" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="40" id="ew8-CU-KMU"/>
@@ -70,6 +73,9 @@
                 </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <accessibility key="accessibilityConfiguration">
+                <accessibilityTraits key="traits" notEnabled="YES"/>
+            </accessibility>
             <constraints>
                 <constraint firstItem="4jF-A2-NBd" firstAttribute="centerY" secondItem="dS3-tz-spe" secondAttribute="centerY" constant="-15" id="H04-gH-iqd"/>
                 <constraint firstItem="1wY-Y9-V0y" firstAttribute="centerY" secondItem="dS3-tz-spe" secondAttribute="centerY" constant="40" id="Mib-98-JB5"/>

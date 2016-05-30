@@ -13,6 +13,6 @@ class SourceButtonLayer: UIView {
 	@IBOutlet var label:UILabel!
 	
 	override func awakeFromNib() {
-		self.iconImageView.tintColor = self.tag == 0 ? UIColor.whiteColor() : UIColor.blackColor()
+		self.iconImageView.tintColor = self.tag == 0 ? UIColor.whiteColor() : UIColor.init(red: 23/255, green: 36/255, blue: 52/255, alpha: 1)
 	}
 }

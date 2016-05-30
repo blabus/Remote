@@ -9,17 +9,11 @@
 import UIKit
 
 class SourceViewController: UIViewController {
-	var sources:[Source] = []
 	var sourceButtons:[SourceButton] = []
+	private let api = ControlAPI.sharedInstance
 	
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-		self.sources.append(Source.init(input: "HDMI1", label: "Apple TV", icon: UIImage.init(named: "source-appletv")!))
-		self.sources.append(Source.init(input: "HDMI2", label: "Xbox", icon: UIImage.init(named: "source-xbox")!))
-		self.sources.append(Source.init(input: "HDMI3", label: "PS4", icon: UIImage.init(named: "source-ps4")!))
-		self.sources.append(Source.init(input: "HDMI4", label: "Wii", icon: UIImage.init(named: "source-wii")!))
-		self.sources.append(Source.init(input: "HDMI5", label: "Blu-ray", icon: UIImage.init(named: "source-bluray")!))
-		self.sources.append(Source.init(input: "HDMI6", label: "Cable", icon: UIImage.init(named: "source-cable")!))
 		
 		func sourceButtons(rootView: UIView) -> [SourceButton] {
 			var buttonArray = [SourceButton]()
@@ -34,7 +28,7 @@ class SourceViewController: UIViewController {
 		}
 		self.sourceButtons = sourceButtons(self.view)
 		for sourceButton in self.sourceButtons {
-			let source = self.sources[sourceButton.tag]
+			let source = api.sources[sourceButton.tag]
 			sourceButton.icon = source.icon
 			sourceButton.label = source.label
 		}
@@ -46,6 +40,19 @@ class SourceViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		ControlAPI.sharedInstance.addSourceChangeListener { (selectedSource) in
+			var sourceIndex = ControlAPI.sharedInstance.sources.indexOf({ (source) -> Bool in
+				return source.input == selectedSource?.input
+			})
+			if (sourceIndex == nil) {
+				sourceIndex = -1
+			}
+			for (index, button) in self.sourceButtons.enumerate() {
+				dispatch_async(dispatch_get_main_queue(),{
+					button.setSelected(index == sourceIndex!, position: nil, animated: true)
+				})
+			}
+		}
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -53,16 +60,16 @@ class SourceViewController: UIViewController {
 	}
 	
 	@IBAction func sourceTapped(button: SourceButton) {
-		//let source:Source = self.sources[button.tag]
+		let source:Source = ControlAPI.sharedInstance.sources[button.tag]
 		if (button.selected) {
-			// TODO: SELECT SOURCE
+			ControlAPI.sharedInstance.selectSource(source)
 			for sourceButton in self.sourceButtons { // Deselect all other buttons
 				if (sourceButton != button) {
 					sourceButton.setSelected(false, position: nil, animated: true)
 				}
 			}
 		} else {
-			// TODO: POWER OFF
+			ControlAPI.sharedInstance.selectSource(nil)
 		}
 	}
 }

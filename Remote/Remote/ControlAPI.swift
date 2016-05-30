@@ -15,7 +15,6 @@ class ControlAPI {
 	private let _receiverAddress:String?
 	private let _tvAddress:String?
 	private var _receiverOn:Bool = false
-	private var _tvOn:Bool = false
 	private var _pollingTimer:NSTimer?
 	private var _sourceChangeEventListeners:[(selectedSource: Source?) -> Void] = []
 	private var _volumeChangeEventListeners:[(volume: Float) -> Void] = []
@@ -40,8 +39,11 @@ class ControlAPI {
 		}
 	}
 	
-	func startUpdatingState() {
-		_pollingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(ControlAPI._getState), userInfo: nil, repeats: true)
+	@objc func startUpdatingState() {
+		_getState()
+		dispatch_async(dispatch_get_main_queue(), {
+			self._pollingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self._getState), userInfo: nil, repeats: true)
+		})
 	}
 	
 	func stopUpdatingState() {
@@ -55,6 +57,18 @@ class ControlAPI {
 		request.HTTPMethod = "POST"
 		request.cachePolicy = .ReloadIgnoringCacheData
 		request.HTTPBody = body?.dataUsingEncoding(NSUTF8StringEncoding)
+		let task = session.dataTaskWithRequest(request, completionHandler: completionHandler)
+		task.resume()
+	}
+	
+	func _sendTVRequest(body: [String: AnyObject]?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
+		let session = NSURLSession.sharedSession()
+		let request = NSMutableURLRequest(URL: NSURL(string: "http://\(_tvAddress!)/sony/system")!)
+		request.HTTPMethod = "POST"
+		request.cachePolicy = .ReloadIgnoringCacheData
+		request.addValue("sony-livingroom", forHTTPHeaderField: "X-Auth-PSK")
+		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+		do { request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(body!, options: NSJSONWritingOptions()) } catch { print(error) }
 		let task = session.dataTaskWithRequest(request, completionHandler: completionHandler)
 		task.resume()
 	}
@@ -113,14 +127,21 @@ class ControlAPI {
 	}
 	
 	func selectSource(source: Source?) {
+		stopUpdatingState()
 		self.selectedSource = source
 		let requestBody: String?
 		if (self.selectedSource != nil) {
 			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>On</Power></Power_Control><Input><Input_Sel>\(self.selectedSource!.input)</Input_Sel></Input></Main_Zone></YAMAHA_AV>"
+			_setTVOn(true)
 		} else {
 			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>Standby</Power></Power_Control></Main_Zone></YAMAHA_AV>"
+			_setTVOn(false)
 		}
-		_sendReceiverRequest(requestBody) { (data, response, error) in }
+		_sendReceiverRequest(requestBody) { (data, response, error) in
+			dispatch_async(dispatch_get_main_queue(), { // Delay restarting the polling to wait for receiver to switch inputs
+				NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(self.startUpdatingState), userInfo: nil, repeats: false)
+			})
+		}
 	}
 	
 	func setVolume(volume: Float) {
@@ -129,6 +150,16 @@ class ControlAPI {
 	
 	func setMuted(muted: Bool) {
 		self.muted = muted
+	}
+	
+	func _setTVOn(on: Bool) {
+		let requestBody = [
+			"id": 2,
+			"method": "setPowerStatus",
+			"version": "1.0",
+			"params": [["status": on]]
+		]
+		_sendTVRequest(requestBody) { (data, response, error) in }
 	}
 	
 	func addSourceChangeListener(callback: (selectedSource: Source?)->()) {

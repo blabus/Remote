@@ -48,7 +48,7 @@ class SourceViewController: UIViewController {
 				sourceIndex = -1
 			}
 			for (index, button) in self.sourceButtons.enumerate() {
-				dispatch_async(dispatch_get_main_queue(),{
+				dispatch_async(dispatch_get_main_queue(), {
 					button.setSelected(index == sourceIndex!, position: nil, animated: true)
 				})
 			}

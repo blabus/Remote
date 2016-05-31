@@ -12,42 +12,116 @@ import UIKit
 class ControlAPI {
 	static let sharedInstance = ControlAPI()
 	
-	private let _receiverAddress:String?
-	private let _tvAddress:String?
-	private let _minVolume:Float = -80
-	private var _maxVolume:Float?
+	private var _receiverAddress:String?
+	private var _tvAddress:String?
 	private var _receiverOn:Bool = false
 	private var _pollingTimer:NSTimer?
+	var sources:[Source] = []
+	
 	private var _sourceChangeEventListeners:[(selectedSource: Source?) -> Void] = []
 	private var _volumeChangeEventListeners:[(volume: Float) -> Void] = []
 	private var _muteChangeEventListeners:[(muted: Bool) -> Void] = []
 	
-	var sources:[Source] = []
-	var selectedSource:Source?
-	var volume:Float?
-	var muted:Bool?
+	// Source
+	private var _selectedSource:Source?
+	var selectedSource:Source? {
+		get {
+			return _selectedSource
+		}
+		set {
+			_selectedSource = newValue
+			_setSelectedSource(_selectedSource)
+		}
+	}
+	
+	private func _setSelectedSource(source: Source?) {
+		stopUpdatingState()
+		let requestBody: String?
+		if (source != nil) {
+			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>On</Power></Power_Control><Input><Input_Sel>\(source!.input)</Input_Sel></Input></Main_Zone></YAMAHA_AV>"
+			_setTVOn(true)
+		} else {
+			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>Standby</Power></Power_Control></Main_Zone></YAMAHA_AV>"
+			_setTVOn(false)
+		}
+		_sendReceiverRequest(requestBody) { (data, response, error) in
+			self.startUpdatingStateAfterDelay(1)
+		}
+	}
+	
+	// Volume
+	private let _minDecibalVolume:Float = -80.5
+	private var _maxDecibalVolume:Float = 16.5
+	private var _decibalVolume:Float = 0
+	var volume:Float {
+		get {
+			return (_decibalVolume - _minDecibalVolume) / (_maxDecibalVolume - _minDecibalVolume)
+		}
+		set {
+			_decibalVolume = round(((_maxDecibalVolume - _minDecibalVolume) * newValue + _minDecibalVolume) * 2) / 2
+			_setVolume(_decibalVolume)
+		}
+	}
+	
+	private func _setVolume(decibalVolume: Float) {
+		_sendReceiverRequest("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Volume><Lvl><Val>\(Int(decibalVolume * 10))</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>") { (data, response, error) in }
+	}
+	
+	// Mute
+	private var _muted:Bool = false
+	var muted:Bool {
+		get {
+			return _muted
+		}
+		set {
+			_muted = newValue
+			_setMuted(_muted)
+		}
+	}
+	
+	private func _setMuted(muted: Bool) {
+		stopUpdatingState()
+		_sendReceiverRequest("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Volume><Mute>\(muted ? "On": "Off")</Mute></Volume></Main_Zone></YAMAHA_AV>") { (data, response, error) in
+			self.startUpdatingStateAfterDelay(1)
+		}
+	}
 	
 	init() {
-		_receiverAddress = NSUserDefaults.standardUserDefaults().stringForKey("receiver_network_address")
-		_tvAddress = NSUserDefaults.standardUserDefaults().stringForKey("tv_network_address")
-		_maxVolume = NSUserDefaults.standardUserDefaults().floatForKey("max_volume")
-		_maxVolume = round(max(min(_maxVolume!, 16.5), _minVolume) * 2) / 2
-		NSUserDefaults.standardUserDefaults().setFloat(_maxVolume!, forKey: "max_volume")
+		_maxDecibalVolume = NSUserDefaults.standardUserDefaults().floatForKey("max_volume")
+		_maxDecibalVolume = round(max(min(_maxDecibalVolume, 16.5), _minDecibalVolume) * 2) / 2
+		NSUserDefaults.standardUserDefaults().setFloat(_maxDecibalVolume, forKey: "max_volume")
 		self.sources.append(Source.init(input: "HDMI1", label: "Apple TV", icon: UIImage.init(named: "source-appletv")!))
 		self.sources.append(Source.init(input: "HDMI2", label: "Xbox", icon: UIImage.init(named: "source-xbox")!))
 		self.sources.append(Source.init(input: "HDMI3", label: "PS4", icon: UIImage.init(named: "source-ps4")!))
 		self.sources.append(Source.init(input: "HDMI4", label: "Wii", icon: UIImage.init(named: "source-wii")!))
 		self.sources.append(Source.init(input: "HDMI5", label: "Blu-ray", icon: UIImage.init(named: "source-bluray")!))
 		self.sources.append(Source.init(input: "HDMI6", label: "Cable", icon: UIImage.init(named: "source-cable")!))
-		if (_receiverAddress != nil && _tvAddress != nil) {
-			startUpdatingState()
-		}
 	}
 	
 	@objc func startUpdatingState() {
-		_getState()
+		_receiverAddress = NSUserDefaults.standardUserDefaults().stringForKey("receiver_network_address")
+		_tvAddress = NSUserDefaults.standardUserDefaults().stringForKey("tv_network_address")
+		if (_receiverAddress == nil) {
+			NSUserDefaults.standardUserDefaults().setObject("10.0.1.7", forKey: "receiver_network_address")
+		}
+		if (_tvAddress == nil) {
+			NSUserDefaults.standardUserDefaults().setObject("10.0.1.17", forKey: "tv_network_address")
+		}
+		if (_receiverAddress != nil && _tvAddress != nil) {
+			dispatch_async(dispatch_get_main_queue(), {
+				self._getState()
+				self._pollingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self._getState), userInfo: nil, repeats: true)
+			})
+		} else {
+			let alertView = UIAlertController(title: "No Device Addresses", message: "TV or receiver network addresses not set. Specify them in Settings.", preferredStyle: .Alert)
+			alertView.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+			UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(alertView, animated: true, completion: nil)
+		}
+	}
+	
+	func startUpdatingStateAfterDelay(delay: NSTimeInterval) {
 		dispatch_async(dispatch_get_main_queue(), {
-			self._pollingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self._getState), userInfo: nil, repeats: true)
+			NSTimer.scheduledTimerWithTimeInterval(delay, target: self, selector: #selector(self.startUpdatingState), userInfo: nil, repeats: false)
 		})
 	}
 	
@@ -81,7 +155,7 @@ class ControlAPI {
 	@objc private func _getState() {
 		var newReceiverOn:Bool?
 		var newSelectedSource:Source?
-		var newVolume:Float?
+		var newDecibalVolume:Float?
 		var newMuted:Bool?
 		let requestBody = "<YAMAHA_AV cmd=\"GET\"><Main_Zone><Basic_Status>GetParam</Basic_Status></Main_Zone></YAMAHA_AV>"
 		_sendReceiverRequest(requestBody) { (data, response, error) in
@@ -100,7 +174,7 @@ class ControlAPI {
 			// Volume
 			let volumeState = xml["YAMAHA_AV"]["Main_Zone"]["Basic_Status"]["Volume"]["Lvl"]["Val"].element?.text!
 			let decibalStr = (volumeState! as NSString).substringToIndex(volumeState!.characters.count - 1) + "." + (volumeState! as NSString).substringFromIndex(volumeState!.characters.count - 1)
-			newVolume = (decibalStr as NSString).floatValue
+			newDecibalVolume = (decibalStr as NSString).floatValue
 			// Muted
 			let mutedState = xml["YAMAHA_AV"]["Main_Zone"]["Basic_Status"]["Volume"]["Mute"].element?.text!
 			newMuted = mutedState == "On"
@@ -112,59 +186,31 @@ class ControlAPI {
 						callback(selectedSource: (self._receiverOn ? newSelectedSource : nil))
 					})
 				}
-			} else if (self.selectedSource?.input != newSelectedSource?.input && self._receiverOn) {
-				self.selectedSource = newSelectedSource
+			} else if (self._selectedSource?.input != newSelectedSource?.input && self._receiverOn) {
+				self._selectedSource = newSelectedSource
 				for callback in self._sourceChangeEventListeners {
 					dispatch_async(dispatch_get_main_queue(), {
-						callback(selectedSource: self.selectedSource)
+						callback(selectedSource: self._selectedSource)
 					})
 				}
 			}
-			if (self.volume != newVolume) {
-				self.volume = newVolume!
+			if (self._decibalVolume != newDecibalVolume) {
+				self._decibalVolume = newDecibalVolume!
 				for callback in self._volumeChangeEventListeners {
 					dispatch_async(dispatch_get_main_queue(), {
-						callback(volume: self.volume!)
+						callback(volume: self.volume)
 					})
 				}
 			}
-			if (self.muted != newMuted) {
-				self.muted = newMuted!
+			if (self._muted != newMuted) {
+				self._muted = newMuted!
 				for callback in self._muteChangeEventListeners {
 					dispatch_async(dispatch_get_main_queue(), {
-						callback(muted: self.muted!)
+						callback(muted: self.muted)
 					})
 				}
 			}
 		}
-	}
-	
-	func selectSource(source: Source?) {
-		stopUpdatingState()
-		self.selectedSource = source
-		let requestBody: String?
-		if (self.selectedSource != nil) {
-			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>On</Power></Power_Control><Input><Input_Sel>\(self.selectedSource!.input)</Input_Sel></Input></Main_Zone></YAMAHA_AV>"
-			_setTVOn(true)
-		} else {
-			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>Standby</Power></Power_Control></Main_Zone></YAMAHA_AV>"
-			_setTVOn(false)
-		}
-		_sendReceiverRequest(requestBody) { (data, response, error) in
-			dispatch_async(dispatch_get_main_queue(), { // Delay restarting the polling to wait for receiver to switch inputs
-				NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(self.startUpdatingState), userInfo: nil, repeats: false)
-			})
-		}
-	}
-	
-	func setVolume(volume: Float) {
-		self.volume = max(min(volume, _maxVolume!), _minVolume)
-		let volumeStr = "\(Int(self.volume! * 10))"
-		_sendReceiverRequest("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Volume><Lvl><Val>\(volumeStr)</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>") { (data, response, error) in }
-	}
-	
-	func setMuted(muted: Bool) {
-		self.muted = muted
 	}
 	
 	func _setTVOn(on: Bool) {

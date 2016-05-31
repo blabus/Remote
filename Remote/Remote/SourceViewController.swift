@@ -66,14 +66,14 @@ class SourceViewController: UIViewController {
 	@IBAction func sourceTapped(button: SourceButton) {
 		let source:Source = ControlAPI.sharedInstance.sources[button.tag]
 		if (button.selected) {
-			ControlAPI.sharedInstance.selectSource(source)
+			ControlAPI.sharedInstance.selectedSource = source
 			for sourceButton in self.sourceButtons { // Deselect all other buttons
 				if (sourceButton != button) {
 					sourceButton.setSelected(false, position: nil, animated: true)
 				}
 			}
 		} else {
-			ControlAPI.sharedInstance.selectSource(nil)
+			ControlAPI.sharedInstance.selectedSource = nil
 		}
 	}
 }

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -12,12 +13,65 @@
             <rect key="frame" x="0.0" y="0.0" width="73" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sJR-3d-2EF" userLabel="Slider">
+                    <rect key="frame" x="0.0" y="73" width="73" height="422"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gfC-42-iIE" userLabel="Track">
+                            <rect key="frame" x="33" y="0.0" width="7" height="422"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dDh-Jq-4zw" userLabel="Fill">
+                                    <rect key="frame" x="0.0" y="222" width="7" height="200"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="200" id="Q27-be-S6Q"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <real key="value" value="3.5"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" red="0.17254901960784313" green="0.23529411764705882" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstItem="dDh-Jq-4zw" firstAttribute="width" secondItem="gfC-42-iIE" secondAttribute="width" id="Vej-wu-Rnx"/>
+                                <constraint firstAttribute="width" constant="7" id="kOw-4a-Pfn"/>
+                                <constraint firstAttribute="bottom" secondItem="dDh-Jq-4zw" secondAttribute="bottom" id="tnz-DX-gHE"/>
+                                <constraint firstItem="dDh-Jq-4zw" firstAttribute="centerX" secondItem="gfC-42-iIE" secondAttribute="centerX" id="wKW-NA-NNS"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <real key="value" value="3.5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kk5-4y-X4T" userLabel="Handle">
+                            <rect key="frame" x="0.0" y="185.5" width="73" height="73"/>
+                            <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="kk5-4y-X4T" secondAttribute="height" multiplier="1:1" id="cgj-px-Yf2"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="kk5-4y-X4T" firstAttribute="width" secondItem="sJR-3d-2EF" secondAttribute="width" id="73N-7g-55W"/>
+                        <constraint firstItem="kk5-4y-X4T" firstAttribute="centerX" secondItem="sJR-3d-2EF" secondAttribute="centerX" id="AYJ-e8-gDV"/>
+                        <constraint firstItem="gfC-42-iIE" firstAttribute="centerY" secondItem="sJR-3d-2EF" secondAttribute="centerY" id="TjD-JV-SIq"/>
+                        <constraint firstItem="kk5-4y-X4T" firstAttribute="centerY" secondItem="dDh-Jq-4zw" secondAttribute="top" id="UED-zV-S3A"/>
+                        <constraint firstItem="gfC-42-iIE" firstAttribute="centerX" secondItem="sJR-3d-2EF" secondAttribute="centerX" id="eVU-Pn-e27"/>
+                        <constraint firstItem="gfC-42-iIE" firstAttribute="height" secondItem="sJR-3d-2EF" secondAttribute="height" id="xPh-dP-Df9"/>
+                    </constraints>
+                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FFZ-qI-Sjh" userLabel="Volume Up Button">
                     <rect key="frame" x="0.0" y="0.0" width="73" height="73"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="FFZ-qI-Sjh" secondAttribute="height" multiplier="1:1" id="qnV-Kq-hcw"/>
                     </constraints>
                     <state key="normal" image="volume-up"/>
+                    <connections>
+                        <action selector="volumeUpButtonTapped" destination="iN0-l3-epB" eventType="touchUpInside" id="lIw-Z2-uwS"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HED-Ws-Rwr" userLabel="Volume Down Button">
                     <rect key="frame" x="0.0" y="495" width="73" height="73"/>
@@ -25,22 +79,33 @@
                         <constraint firstAttribute="width" secondItem="HED-Ws-Rwr" secondAttribute="height" multiplier="1:1" id="bXg-dO-eFq"/>
                     </constraints>
                     <state key="normal" image="volume-down"/>
+                    <connections>
+                        <action selector="muteButtonTapped" destination="iN0-l3-epB" eventType="touchUpInside" id="cTG-ls-wid"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="HED-Ws-Rwr" secondAttribute="trailing" id="FmI-eA-z8B"/>
+                <constraint firstItem="sJR-3d-2EF" firstAttribute="top" secondItem="FFZ-qI-Sjh" secondAttribute="bottom" id="Kbc-Tn-JpZ"/>
                 <constraint firstItem="FFZ-qI-Sjh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Lgh-mq-UGd"/>
                 <constraint firstItem="FFZ-qI-Sjh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="h42-Pu-TWf"/>
+                <constraint firstItem="sJR-3d-2EF" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="joQ-RL-W6h"/>
                 <constraint firstItem="HED-Ws-Rwr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kHE-z0-8Q4"/>
                 <constraint firstAttribute="trailing" secondItem="FFZ-qI-Sjh" secondAttribute="trailing" id="qzU-Fs-MiQ"/>
                 <constraint firstAttribute="bottom" secondItem="HED-Ws-Rwr" secondAttribute="bottom" id="sFv-5E-taF"/>
+                <constraint firstItem="sJR-3d-2EF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uzj-gw-LZZ"/>
+                <constraint firstItem="sJR-3d-2EF" firstAttribute="bottom" secondItem="HED-Ws-Rwr" secondAttribute="top" id="wYL-Mh-yke"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="sliderContainerView" destination="sJR-3d-2EF" id="6PQ-gk-BBV"/>
+                <outlet property="sliderFillHeightConstraint" destination="Q27-be-S6Q" id="kSN-l5-NVs"/>
+                <outlet property="sliderFillView" destination="dDh-Jq-4zw" id="eIb-lE-WPy"/>
+                <outlet property="sliderHandleView" destination="kk5-4y-X4T" id="N2T-FP-Q8k"/>
                 <outlet property="volumeDownButton" destination="HED-Ws-Rwr" id="w76-dK-bR8"/>
                 <outlet property="volumeUpButton" destination="FFZ-qI-Sjh" id="Pwf-d0-5IP"/>
             </connections>

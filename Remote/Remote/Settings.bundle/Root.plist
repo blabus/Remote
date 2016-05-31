@@ -20,7 +20,7 @@
 			<key>Key</key>
 			<string>receiver_network_address</string>
 			<key>DefaultValue</key>
-			<string>10.0.0.1</string>
+			<string>10.0.1.7</string>
 			<key>KeyboardType</key>
 			<string>NumbersAndPunctuation</string>
 			<key>AutocapitalizationType</key>
@@ -36,7 +36,7 @@
 			<key>Key</key>
 			<string>tv_network_address</string>
 			<key>DefaultValue</key>
-			<string>10.0.0.2</string>
+			<string>10.0.1.17</string>
 			<key>KeyboardType</key>
 			<string>NumbersAndPunctuation</string>
 			<key>AutocapitalizationType</key>

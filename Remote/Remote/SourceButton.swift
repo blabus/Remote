@@ -72,8 +72,10 @@ class SourceButton: UIControl {
 	override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		let touch = touches.first
 		let origin = touch!.locationInView(self.normalView)
-		setSelected(!self.selected, position: origin, animated: true)
-		self.sendActionsForControlEvents(UIControlEvents.ValueChanged)
+		if (CGRectContainsPoint(self.highlightedView!.bounds, origin)) {
+			setSelected(!self.selected, position: origin, animated: true)
+			self.sendActionsForControlEvents(UIControlEvents.ValueChanged)
+		}
 	}
 	
 	func setSelected(selected: Bool, position: CGPoint?, animated: Bool) {

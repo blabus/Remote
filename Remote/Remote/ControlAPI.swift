@@ -39,7 +39,7 @@ class ControlAPI {
 		let requestBody: String?
 		if (source != nil) {
 			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>On</Power></Power_Control><Input><Input_Sel>\(source!.input)</Input_Sel></Input></Main_Zone></YAMAHA_AV>"
-			_setTVOn(true)
+			_setTVOn(source!.isVideo)
 		} else {
 			requestBody = "<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>Standby</Power></Power_Control></Main_Zone></YAMAHA_AV>"
 			_setTVOn(false)
@@ -91,11 +91,11 @@ class ControlAPI {
 		_maxDecibalVolume = round(max(min(_maxDecibalVolume, 16.5), _minDecibalVolume) * 2) / 2
 		NSUserDefaults.standardUserDefaults().setFloat(_maxDecibalVolume, forKey: "max_volume")
 		self.sources.append(Source.init(input: "HDMI1", label: "Apple TV", icon: UIImage.init(named: "source-appletv")!))
+		self.sources.append(Source.init(input: "AV3", label: "Sonos", icon: UIImage.init(named: "source-sonos")!, isVideo: false))
 		self.sources.append(Source.init(input: "HDMI2", label: "Xbox", icon: UIImage.init(named: "source-xbox")!))
 		self.sources.append(Source.init(input: "HDMI3", label: "PS4", icon: UIImage.init(named: "source-ps4")!))
 		self.sources.append(Source.init(input: "HDMI4", label: "Wii", icon: UIImage.init(named: "source-wii")!))
-		self.sources.append(Source.init(input: "HDMI5", label: "Blu-ray", icon: UIImage.init(named: "source-bluray")!))
-		self.sources.append(Source.init(input: "HDMI6", label: "Cable", icon: UIImage.init(named: "source-cable")!))
+		self.sources.append(Source.init(input: "HDMI5", label: "Cable", icon: UIImage.init(named: "source-cable")!))
 	}
 	
 	@objc func startUpdatingState() {

@@ -13,10 +13,12 @@ struct Source {
 	let input:String
 	let label:String
 	let icon:UIImage
+	let isVideo:Bool
 	
-	init(input: String, label: String, icon: UIImage) {
+	init(input: String, label: String, icon: UIImage, isVideo: Bool = true) {
 		self.input = input
 		self.label = label
 		self.icon = icon
+		self.isVideo = isVideo
 	}
 }
